@@ -1,4 +1,4 @@
-# nlp-final-proyect
+# Proyecto Final NLP
 Proyecto final de la materia NLP de la Universidad Javeriana
 
 Maestria en Inteligencia Artificial
