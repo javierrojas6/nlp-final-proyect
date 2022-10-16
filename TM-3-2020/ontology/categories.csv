@@ -1,0 +1,43 @@
+intent,scenario,success
+buy,4 exchanges with 1 error and predefined variables,1
+buy,auto template 1 with theater name error,1
+buy,auto template 2 success,1
+buy,auto template 3 with user initially undecided,1
+buy,auto template 4 no purchase as movie not playing locally,0
+buy,auto template 5 asking for options at one theater,1
+buy,auto template 6 user forgets what they decided on,1
+buy,auto template 7 vague user input clarified,1
+buy,auto template 8 assistant gets back on track,1
+buy,auto template 9 success after user decides,1
+buy,auto template 10,1
+buy,auto template 11,1
+buy,auto template 12 with resolve entity success,1
+recommendation,auto template 13 movie name resolution,1
+buy,auto template 14 user wanders off track,1
+change,change of movie with predefined values,1
+change,change of movie with static variables,1
+buy,deferred purchase,1
+buy,entity resolution,1
+buy,fewest turns,1
+buy,fewest turns with errors and predefined variables,1
+buy,mishearing,1
+buy,misunderstanding,1
+change,movie change,1
+buy,no theaters nearby,0
+buy,options unavailable,0
+recommendation,recommendation,1
+change,screening change,1
+buy,successful purchase,1
+buy,successful purchase with fake kb table,1
+buy,successful purchase with fake kb table - 1,0
+buy,successful purchase with fake kb table - 2,1
+buy,successful purchase with predefined values v1,1
+buy,successful purchase with predefined values v2,1
+buy,successful purchase with predefined values v3,1
+buy,successful purchase with static variables,1
+buy,successful purchase with static variables v2,1
+change,theater change,1
+buy,theaters temporarily closed,0
+change,tickets change,1
+change,time change,1
+change,time change with user made up values,1
