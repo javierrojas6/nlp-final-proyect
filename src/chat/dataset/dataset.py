@@ -88,3 +88,19 @@ class Dataset:
     text = text.replace('\r', '')
 
     return text
+  
+  def get_chat_lines_dataframe(self, size=100):
+    cds = np.array([])
+    ids = np.array([])
+    speakers = np.array([])
+    text = np.array([])
+
+    for conversation in self.jsonObj[:size]:
+      for row in conversation['utterances']:
+        cds = np.append(cds, conversation['conversation_id'])
+        ids = np.append(ids, row['index'])
+        speakers = np.append(speakers, row['speaker'])
+        text = np.append(text, row['text'])
+        
+    columns = np.array([cds, ids, speakers, text]).T
+    return pd.DataFrame(data=columns, columns=['conversation_id', 'index', 'speaker', 'text'])
