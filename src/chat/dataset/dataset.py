@@ -109,6 +109,16 @@ class Dataset:
         columns = np.array([cds, ids, speakers, text]).T
         return pd.DataFrame(data=columns, columns=['conversation_id', 'index', 'speaker', 'text'])
 
+    def get_clean_text(self,text, segments):
+        real_text=''
+        last_index=0
+        for seg in segments:
+            real_text+=text[last_index:seg['start_index']]
+            real_text+='['+seg['annotations'][0]['name']+']'
+            last_index=seg['end_index']
+        real_text+=text[last_index:]
+        return real_text
+        
     def get_chat_lines_train_dataframe(self, size=100):
         cds = np.array([])
         user = np.array([])
@@ -119,12 +129,13 @@ class Dataset:
             tmp_assistant = np.array([])
             previous = ''
 
-            for row in conversation['utterances']:
+        for row in conversation['utterances']:
+                real_text= self.get_clean_text( row['text'],  row['segments'])
                 if row['speaker'] == 'user':
-                    tmp_user = np.append(tmp_user, row['text'])
+                    tmp_user = np.append(tmp_user,real_text)
 
                 if row['speaker'] == 'assistant':
-                    tmp_assistant = np.append(tmp_assistant, row['text'])
+                    tmp_assistant = np.append(tmp_assistant,real_text)
 
                 if row['speaker'] == 'user' and previous == 'user':
                     tmp_assistant = np.append(tmp_assistant, '')
