@@ -150,14 +150,14 @@ class Dataset:
 
                 previous = row['speaker']
 
-        if tmp_user.shape[0] > tmp_assistant.shape[0]:
-            tmp_assistant = np.append(tmp_assistant, [''] * (tmp_user.shape[0] - tmp_assistant.shape[0]))
-        else:
-            tmp_user = np.append(tmp_user, [''] * (tmp_assistant.shape[0] - tmp_user.shape[0]))
+            if tmp_user.shape[0] > tmp_assistant.shape[0]:
+                tmp_assistant = np.append(tmp_assistant, [''] * (tmp_user.shape[0] - tmp_assistant.shape[0]))
+            else:
+                tmp_user = np.append(tmp_user, [''] * (tmp_assistant.shape[0] - tmp_user.shape[0]))
 
-        user = np.append(user, tmp_user)
-        assistant = np.append(assistant, tmp_assistant)
-        cds = np.append(cds, np.array([conversation['conversation_id']] * tmp_user.shape[0]))
+            user = np.append(user, tmp_user)
+            assistant = np.append(assistant, tmp_assistant)
+            cds = np.append(cds, np.array([conversation['conversation_id']] * tmp_user.shape[0]))
 
         columns = np.array([cds, user, assistant]).T
         return pd.DataFrame(data=columns, columns=['conversation_id', 'user', 'assistant'])
