@@ -109,16 +109,17 @@ class Dataset:
         columns = np.array([cds, ids, speakers, text]).T
         return pd.DataFrame(data=columns, columns=['conversation_id', 'index', 'speaker', 'text'])
 
-    def get_clean_text(self,text, segments):
-        real_text=''
-        last_index=0
+    def get_clean_text(self, text, segments):
+        text = text.replace('\u2019', '\'')
+        real_text = ''
+        last_index = 0
         for seg in segments:
-            real_text+=text[last_index:seg['start_index']]
-            real_text+='['+seg['annotations'][0]['name']+']'
-            last_index=seg['end_index']
-        real_text+=text[last_index:]
+            real_text += text[last_index:seg['start_index']]
+            real_text += '['+seg['annotations'][0]['name']+']'
+            last_index = seg['end_index']
+        real_text += text[last_index:]
         return real_text
-        
+
     def get_chat_lines_train_dataframe(self, size=100):
         cds = np.array([])
         user = np.array([])
@@ -129,13 +130,17 @@ class Dataset:
             tmp_assistant = np.array([])
             previous = ''
 
-        for row in conversation['utterances']:
-                real_text= self.get_clean_text( row['text'],  row['segments'])
+            for row in conversation['utterances']:
+                real_text = row['text']
+
+                if 'segments' in row.keys():
+                    real_text = self.get_clean_text(row['text'],  row['segments'])
+
                 if row['speaker'] == 'user':
-                    tmp_user = np.append(tmp_user,real_text)
+                    tmp_user = np.append(tmp_user, real_text)
 
                 if row['speaker'] == 'assistant':
-                    tmp_assistant = np.append(tmp_assistant,real_text)
+                    tmp_assistant = np.append(tmp_assistant, real_text)
 
                 if row['speaker'] == 'user' and previous == 'user':
                     tmp_assistant = np.append(tmp_assistant, '')
@@ -145,14 +150,14 @@ class Dataset:
 
                 previous = row['speaker']
 
-            if tmp_user.shape[0] > tmp_assistant.shape[0]:
-                tmp_assistant = np.append(tmp_assistant, [''] * (tmp_user.shape[0] - tmp_assistant.shape[0]))
-            else:
-                tmp_user = np.append(tmp_user, [''] * (tmp_assistant.shape[0] - tmp_user.shape[0]))
+        if tmp_user.shape[0] > tmp_assistant.shape[0]:
+            tmp_assistant = np.append(tmp_assistant, [''] * (tmp_user.shape[0] - tmp_assistant.shape[0]))
+        else:
+            tmp_user = np.append(tmp_user, [''] * (tmp_assistant.shape[0] - tmp_user.shape[0]))
 
-            user = np.append(user, tmp_user)
-            assistant = np.append(assistant, tmp_assistant)
-            cds = np.append(cds, np.array([conversation['conversation_id']] * tmp_user.shape[0]))
+        user = np.append(user, tmp_user)
+        assistant = np.append(assistant, tmp_assistant)
+        cds = np.append(cds, np.array([conversation['conversation_id']] * tmp_user.shape[0]))
 
         columns = np.array([cds, user, assistant]).T
         return pd.DataFrame(data=columns, columns=['conversation_id', 'user', 'assistant'])
